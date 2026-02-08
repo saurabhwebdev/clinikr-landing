@@ -39,19 +39,28 @@ export default function Contact() {
     setSubmitting(true)
 
     const form = e.target
-    const formData = new FormData(form)
 
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(Object.fromEntries(formData)),
+        body: JSON.stringify({
+          access_key: 'a1d8a3cd-7a21-4e37-b142-ba17bf344d27',
+          subject: 'New Contact Form Submission - Clinikr',
+          from_name: 'Clinikr Website',
+          name: form.name.value,
+          phone: form.phone.value,
+          email: form.email.value,
+          clinic: form.clinic.value,
+          message: form.message.value,
+        }),
       })
       const data = await res.json()
       if (data.success) {
         setSubmitted(true)
         form.reset()
       } else {
+        console.error('Web3Forms error:', data)
         alert('Something went wrong. Please try again or email us directly.')
       }
     } catch (err) {
@@ -175,11 +184,6 @@ export default function Contact() {
                 onSubmit={handleSubmit}
                 className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm"
               >
-                <input type="hidden" name="access_key" value="a1d8a3cd-7a21-4e37-b142-ba17bf344d27" />
-                <input type="hidden" name="subject" value="New Contact Form Submission — Clinikr" />
-                <input type="hidden" name="from_name" value="Clinikr Website" />
-                <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
-
                 <h3 className="text-lg font-bold text-gray-900 mb-6">Send us a message</h3>
 
                 <div className="grid gap-5 sm:grid-cols-2">
