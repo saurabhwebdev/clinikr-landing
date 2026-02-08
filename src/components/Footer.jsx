@@ -18,8 +18,6 @@ const footerSections = [
       { label: 'Features', href: '#features' },
       { label: 'Modules', href: '#modules' },
       { label: 'Pricing', href: '#pricing' },
-      { label: 'Changelog', href: '#' },
-      { label: 'Roadmap', href: '#' },
     ],
   },
   {
