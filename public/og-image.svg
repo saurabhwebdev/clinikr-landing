@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#030712" />
+      <stop offset="100%" style="stop-color:#111827" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1" />
+      <stop offset="100%" style="stop-color:#8B5CF6" />
+    </linearGradient>
+    <linearGradient id="iconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1" />
+      <stop offset="100%" style="stop-color:#4F46E5" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <!-- Decorative circles -->
+  <circle cx="200" cy="100" r="300" fill="#6366F1" opacity="0.06" />
+  <circle cx="1000" cy="500" r="250" fill="#8B5CF6" opacity="0.05" />
+
+  <!-- App icon -->
+  <g transform="translate(490, 140)">
+    <rect x="0" y="0" width="80" height="80" rx="18" fill="url(#iconBg)" />
+    <g fill="white">
+      <rect x="30" y="14" width="20" height="52" rx="10" />
+      <rect x="14" y="30" width="52" height="20" rx="10" />
+    </g>
+  </g>
+
+  <!-- Brand name -->
+  <text x="580" y="180" font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="800" fill="white" text-anchor="left">
+    Clinik<tspan fill="#818CF8">r</tspan>
+  </text>
+
+  <!-- Title -->
+  <text x="600" y="320" font-family="Inter, system-ui, sans-serif" font-size="48" font-weight="800" fill="white" text-anchor="middle">
+    Your Entire Clinic, In Your Pocket
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="380" font-family="Inter, system-ui, sans-serif" font-size="22" fill="#9CA3AF" text-anchor="middle">
+    Patients, Appointments, Billing, EMR, Prescriptions &amp; POS
+  </text>
+  <text x="600" y="415" font-family="Inter, system-ui, sans-serif" font-size="22" fill="#9CA3AF" text-anchor="middle">
+    One app that runs everywhere. Built for Indian healthcare.
+  </text>
+
+  <!-- Bottom badge -->
+  <rect x="470" y="470" width="260" height="44" rx="22" fill="url(#accent)" opacity="0.15" />
+  <text x="600" y="498" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#818CF8" text-anchor="middle">
+    Start Free — No Credit Card Needed
+  </text>
+
+  <!-- Bottom accent line -->
+  <rect x="0" y="620" width="1200" height="10" fill="url(#accent)" />
+</svg>
