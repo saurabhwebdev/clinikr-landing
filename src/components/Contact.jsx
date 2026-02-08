@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Mail, Phone, MapPin, MessageSquare, Send, ArrowRight, Clock } from 'lucide-react'
+import { Mail, Phone, MapPin, MessageSquare, Send, ArrowRight, Clock, CheckCircle2 } from 'lucide-react'
 
 const ease = [0.22, 1, 0.36, 1]
 
@@ -31,6 +31,30 @@ const contactInfo = [
 export default function Contact() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSubmitting(true)
+
+    const form = e.target
+    const formData = new FormData(form)
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString(),
+      })
+      setSubmitted(true)
+      form.reset()
+    } catch {
+      alert('Something went wrong. Please try again or email us directly.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <section id="contact" className="relative bg-gray-50 pt-16 pb-20 lg:pt-20 lg:pb-24 overflow-hidden">
@@ -124,67 +148,111 @@ export default function Contact() {
             transition={{ duration: 0.7, delay: 0.2, ease }}
             className="lg:col-span-3"
           >
-            <form
-              className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <h3 className="text-lg font-bold text-gray-900 mb-6">Send us a message</h3>
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
-                  <input
-                    type="text"
-                    placeholder="Dr. Arun Mehta"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
-                  />
+            {submitted ? (
+              <div className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50">
+                  <CheckCircle2 className="h-7 w-7 text-emerald-600" />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
-                  <input
-                    type="tel"
-                    placeholder="+91 80950 86053"
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
-                  />
-                </div>
+                <h3 className="text-lg font-bold text-gray-900">Message Sent!</h3>
+                <p className="mt-2 text-sm text-gray-500">
+                  Thank you for reaching out. We'll get back to you within 24 hours.
+                </p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="mt-6 inline-flex items-center gap-2 rounded-full border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-700 transition-all hover:bg-gray-50"
+                >
+                  Send Another Message
+                </button>
               </div>
-
-              <div className="mt-5">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
-                <input
-                  type="email"
-                  placeholder="arun@clinic.com"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
-                />
-              </div>
-
-              <div className="mt-5">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Clinic Name</label>
-                <input
-                  type="text"
-                  placeholder="HealthFirst Clinic"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
-                />
-              </div>
-
-              <div className="mt-5">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">How can we help?</label>
-                <textarea
-                  rows={4}
-                  placeholder="Tell us about your clinic and what you're looking for..."
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gray-900 px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl sm:w-auto"
+            ) : (
+              <form
+                name="contact"
+                method="POST"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+                className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm"
               >
-                <Send className="h-4 w-4" />
-                Send Message
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </button>
-            </form>
+                <input type="hidden" name="form-name" value="contact" />
+                <p className="hidden">
+                  <label>
+                    Don't fill this out: <input name="bot-field" />
+                  </label>
+                </p>
+
+                <h3 className="text-lg font-bold text-gray-900 mb-6">Send us a message</h3>
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      placeholder="Dr. Arun Mehta"
+                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      required
+                      placeholder="+91 80950 86053"
+                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-5">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="arun@clinic.com"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
+                  />
+                </div>
+
+                <div className="mt-5">
+                  <label htmlFor="clinic" className="block text-sm font-medium text-gray-700 mb-1.5">Clinic Name</label>
+                  <input
+                    id="clinic"
+                    name="clinic"
+                    type="text"
+                    placeholder="HealthFirst Clinic"
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white"
+                  />
+                </div>
+
+                <div className="mt-5">
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1.5">How can we help?</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    required
+                    placeholder="Tell us about your clinic and what you're looking for..."
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary-400 focus:ring-2 focus:ring-primary-100 focus:bg-white resize-none"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gray-900 px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-gray-800 hover:shadow-xl sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <Send className="h-4 w-4" />
+                  {submitting ? 'Sending...' : 'Send Message'}
+                  {!submitting && <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />}
+                </button>
+              </form>
+            )}
           </motion.div>
         </div>
       </div>
