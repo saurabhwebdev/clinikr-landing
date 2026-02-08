@@ -40,14 +40,12 @@ export default function Contact() {
 
     const form = e.target
     const formData = new FormData(form)
-    formData.append('access_key', 'a1d8a3cd-7a21-4e37-b142-ba17bf344d27')
-    formData.append('subject', 'New Contact Form Submission — Clinikr')
-    formData.append('from_name', 'Clinikr Website')
 
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(formData)),
       })
       const data = await res.json()
       if (data.success) {
@@ -56,7 +54,8 @@ export default function Contact() {
       } else {
         alert('Something went wrong. Please try again or email us directly.')
       }
-    } catch {
+    } catch (err) {
+      console.error('Form submission error:', err)
       alert('Something went wrong. Please try again or email us directly.')
     } finally {
       setSubmitting(false)
@@ -176,7 +175,10 @@ export default function Contact() {
                 onSubmit={handleSubmit}
                 className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm"
               >
-                <input type="hidden" name="botcheck" className="hidden" />
+                <input type="hidden" name="access_key" value="a1d8a3cd-7a21-4e37-b142-ba17bf344d27" />
+                <input type="hidden" name="subject" value="New Contact Form Submission — Clinikr" />
+                <input type="hidden" name="from_name" value="Clinikr Website" />
+                <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
 
                 <h3 className="text-lg font-bold text-gray-900 mb-6">Send us a message</h3>
 
