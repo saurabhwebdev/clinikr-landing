@@ -40,15 +40,22 @@ export default function Contact() {
 
     const form = e.target
     const formData = new FormData(form)
+    formData.append('access_key', 'a1d8a3cd-7a21-4e37-b142-ba17bf344d27')
+    formData.append('subject', 'New Contact Form Submission — Clinikr')
+    formData.append('from_name', 'Clinikr Website')
 
     try {
-      await fetch('/', {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData).toString(),
+        body: formData,
       })
-      setSubmitted(true)
-      form.reset()
+      const data = await res.json()
+      if (data.success) {
+        setSubmitted(true)
+        form.reset()
+      } else {
+        alert('Something went wrong. Please try again or email us directly.')
+      }
     } catch {
       alert('Something went wrong. Please try again or email us directly.')
     } finally {
@@ -166,19 +173,10 @@ export default function Contact() {
               </div>
             ) : (
               <form
-                name="contact"
-                method="POST"
-                data-netlify="true"
-                netlify-honeypot="bot-field"
                 onSubmit={handleSubmit}
                 className="rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm"
               >
-                <input type="hidden" name="form-name" value="contact" />
-                <p className="hidden">
-                  <label>
-                    Don't fill this out: <input name="bot-field" />
-                  </label>
-                </p>
+                <input type="hidden" name="botcheck" className="hidden" />
 
                 <h3 className="text-lg font-bold text-gray-900 mb-6">Send us a message</h3>
 
